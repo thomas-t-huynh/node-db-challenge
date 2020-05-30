@@ -6,7 +6,8 @@ module.exports = {
     addProject,
     getProjects,
     addTask,
-    getTasks
+    getTasks,
+    addContext
 }
 
 function addResource(resource) {
@@ -34,4 +35,9 @@ function getTasks(id) {
         .join('projects as p', 't.project_id', 'p.id')
         .where('t.project_id', id)
         .select('p.name', 'p.description', 't.description', 't.note', 't.completed')
+}
+
+function addContext(context, task_id) {
+    return db('contexts').insert(context)
+        .then(ids => db('tasks_contexts').insert({task_id: task_id, context_id: ids[0]}))
 }
