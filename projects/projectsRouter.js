@@ -59,7 +59,7 @@ router.post('/tasks', async (req, res) => {
 router.get('/:id/tasks', async (req, res) => {
     const id = req.params.id
     try {
-        const tasks = await db.getTasks(id)
+        const tasks = await db.getProjectTasks(id)
         if (tasks) { return res.status(200).json(tasks) }
         res.status(404).json({ message: 'no tasks' })
     } catch(e) {
@@ -74,6 +74,17 @@ router.post('/:id/contexts', async (req, res) => {
         const context = await db.addContext(body, id)
         if (context) { return res.status(201).json(context) }
         res.status(400).json({ message: 'problem add context' })
+    } catch(e) {
+        res.status(500).json({ message: 'db error' })
+    }
+})
+
+router.get('/tasks/:id/contexts', async (req, res) => {
+    const id = req.params.id
+    try {
+        const tasks = await db.getTasks(id)
+        if (tasks) { return res.status(200).json(tasks) }
+        res.status(404).json({ message: 'no tasks' })
     } catch(e) {
         res.status(500).json({ message: 'db error' })
     }
